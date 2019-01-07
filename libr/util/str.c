@@ -1560,10 +1560,16 @@ R_API char *r_str_escape_utf8_for_json(const char *buf, int buf_size) {
 
 static int __str_ansi_length (char const *str) {
 	int i = 1;
-	if (str[0] == 0x1b && str[1] == '[') {
-		i++;
-		while (str[i] && str[i] != 'J' && str[i] != 'm' && str[i] != 'H' && str[i] != 'K') {
+	if (str[0] == 0x1b) {
+		if (str[1] == '[') {
 			i++;
+			while (str[i] && str[i] != 'J' && str[i] != 'm' && str[i] != 'H' && str[i] != 'K') {
+				i++;
+			}
+		} else if (str[1] == '#') {
+			while (str[i] && str[i] != 'q') {
+				i++;
+			}
 		}
 		if (str[i]) {
 			i++;
